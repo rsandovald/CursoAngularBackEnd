@@ -47,7 +47,7 @@ namespace Backend
 
             services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
 
-            services.AddTransient<IAlmacenadorArchivos, AlmacenadorAzureStorage>();
+            services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
             services.AddHttpContextAccessor();                
             
 
