@@ -104,5 +104,12 @@ namespace PeliculasAPI.Controllers
             return NoContent();
 
         }
+
+        [HttpGet("todos")]
+        public async Task<ActionResult<List<GeneroDTO>>> Todos()
+        {
+            var generos = await this.Context.Generos.ToListAsync();
+            return  this.Mapper.Map<List<GeneroDTO>>(generos);
+        }
     }
 }

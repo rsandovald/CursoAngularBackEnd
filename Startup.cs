@@ -20,6 +20,10 @@ using PeliculasAPI.Utilidades;
 using AutoMapper;
 using NetTopologySuite.Geometries;
 using NetTopologySuite;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Backend
 {
@@ -67,6 +71,22 @@ namespace Backend
            }); 
             
 
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opciones => 
+                opciones.TokenValidationParameters = new TokenValidationParameters { 
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["llavejwt"])),
+                    ClockSkew = TimeSpan.Zero
+                });
+
             services.AddControllers( options =>
             {
                 options.Filters.Add(typeof(FiltroDeExcepcion)); 
@@ -92,6 +112,8 @@ namespace Backend
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 
